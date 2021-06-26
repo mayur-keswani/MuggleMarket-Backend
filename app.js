@@ -1,8 +1,7 @@
 const express = require('express')
 const app = express()
 const mongoose=require('mongoose')
-const bodyParser = require('body-parser')
-var cors = require('cors')
+const port = process.env.PORT || 8080
 
 const multer = require('multer')
 
@@ -64,7 +63,7 @@ function fileFilter (req, file, cb) {
        useUnifiedTopology:true
       })
     .then(()=>{
-      app.listen(8080,()=>{console.log("you are live....")})
+      app.listen(port,()=>{console.log("you are live....")})
     })
     .catch((error=>{
       console.log(error)
