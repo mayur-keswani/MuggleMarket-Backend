@@ -2,6 +2,10 @@ const express = require('express')
 const isAuth = require('../../middleware/isAuth')
 const router= express.Router()
 const Store = require('../../modal/Store')
+const User = require('../../modal/User')
+const Order = require('../../modal/Order');
+const Product = require('../../modal/Product')
+
 router.get('/',(req,res)=>{
 	Store.find()
 		.then(stores=>{
@@ -53,5 +57,63 @@ router.get('/my-stores',isAuth,(req,res)=>{
 		})
 })
 
+router.post('/checkout',isAuth,(req,res,next)=>{
+
+	const orderItems = req.body
+	console.log(orderItems)
+	// [{productID:,productName:,productPrice,quantity}] => [{productID:,quantity}]
+	const cart=orderItems.map(item=>{
+		return {productID:item.productID,quantity:item.quantity}
+	})
+	console.log(cart)
+	User.findById(req.user)
+		.then(user=>{
+			if(!user){
+				const error = new Error("User not found")
+				error.statusCode = 401;
+			}
+			user.cart=cart;
+			user.save()
+		})
+		.then(result=>{
+			res.status(201).json({cart: result,message:"Good To Proceed:)"})
+		})
+		.catch(error=>{
+			next(error)
+		})
+})
+
+router.post('/place-order',isAuth,(req,res,next)=>{
+	const address=req.body.address;
+	const charges = req.body.charges
+	const grandTotal = req.body.grandTotal;
+	const username = req.body.username
+	const items = req.body.items;
+	//console.log(items)
+	const user = {
+		userID:req.user,
+		username:username,
+		address:address,
+	}
+	const order = new Order({
+		user:user,
+		items:items,
+		charges:charges,
+		grand_total:grandTotal
+
+	})
+	 order.save()
+	 	.then(order=>{
+			res.status(201).json({message:"Your Order is successfully being placed",order:order})
+		 })
+		.catch(error=>{
+			if(!error.statusCode)
+				error.statusCode=500
+
+			next(error)
+		})
+	
+	
+})
 
 module.exports = router

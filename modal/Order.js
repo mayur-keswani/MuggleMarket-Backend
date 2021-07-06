@@ -7,9 +7,9 @@ const orderSchema = new Schema({
 	user:{
 		userID:{
 			type:Schema.Types.ObjectId,
-			ref:User
+			ref:'User'
 		},
-		name:{
+		username:{
 			type:String,
 		},
 		address:{
@@ -17,16 +17,45 @@ const orderSchema = new Schema({
 			required:true
 		}
 	},
-	store:{
-		type:Schema.Types.ObjectId,
-		ref:Store
-	},
+	
 	items:[{
 		productID:{
 			type:Schema.Types.ObjectId,
-			ref:Product
-		}
-	}]
+			ref:'Product'
+		},
+		name:{
+			type:String,
+			required:true
+		},
+		description:{
+			type:String
+		},
+		product_pic:{
+			type:String,
+			required:true
+		},
+		quantity:{
+			type:Number,
+			required:true
+		},
+		price:{
+			type:Number,
+			required:true
+		},
+		storeID:{
+			type:Schema.Types.ObjectId,
+			ref:'Store'
+		},
+				
+	}],
+	charges:{
+		type:Number,
+		required:true,
+	},
+	grand_total:{
+		type:Number,
+		required:true
+	}
 })
 
 module.exports= mongoose.model('Order',orderSchema)

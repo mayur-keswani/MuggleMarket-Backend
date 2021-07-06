@@ -45,7 +45,6 @@ function fileFilter (req, file, cb) {
   app.use(multer({ storage: storage , filefilter: fileFilter}).single('storeImage'))
  
 
-
   app.use(AdminRouter);
   app.use(StoreRouter);
   app.use(AuthRouter);

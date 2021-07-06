@@ -3,6 +3,7 @@ const User = require('../../modal/User');
 const router = express.Router();
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const isAuth = require('../../middleware/isAuth')
 
 router.post('/auth/signup',(req,res,next)=>{
 	const username= req.body.username
@@ -95,5 +96,21 @@ router.post('/auth/login',(req,res,next)=>{
 	
 })
 
-
+router.get('/auth-details',isAuth, (req, res,next)=>{
+	User
+		.findById(req.user)
+		.populate('cart.productID')
+		.exec((error,user)=>{
+			if(error){
+				next(error)
+			}else{
+				if(!user){
+					const error = new Error("User not found");
+					error.statusCode=404;
+					next(error)
+				}	
+				res.status(200).json({user:user})
+			}
+		})
+})
 module.exports = router
