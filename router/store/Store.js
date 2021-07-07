@@ -6,6 +6,20 @@ const User = require('../../modal/User')
 const Order = require('../../modal/Order');
 const Product = require('../../modal/Product')
 
+const accountSid = process.env.TRIVIA_ACCOUNT_SID; 
+const authToken = process.env.TRIVIA_AUTH_TOKEN; 
+const client = require('twilio')(accountSid, authToken); 
+ 
+
+const sendWhatsappMessage = (order) =>{
+	client.messages 
+      		.create({ 
+         		body: `You have revieved an order of ${order.items.map(item=> item.name+'('+item.price+')' )} items from ${order.user.username} at Rs${order.grand_total}.Pls. get it deliver at Address : ${order.user.address}  `, 
+        		from: 'whatsapp:+14155238886',       
+         		to: 'whatsapp:+919106963839' 
+      		 }) 
+			 .done()
+}
 router.get('/',(req,res)=>{
 	Store.find()
 		.then(stores=>{
@@ -104,16 +118,29 @@ router.post('/place-order',isAuth,(req,res,next)=>{
 	})
 	 order.save()
 	 	.then(order=>{
-			res.status(201).json({message:"Your Order is successfully being placed",order:order})
-		 })
+			sendWhatsappMessage(order)
+			// console.log(message.sid)
+		    res.status(201).json({message:"Your Order is successfully being placed",order:order})
+		}) 
 		.catch(error=>{
 			if(!error.statusCode)
 				error.statusCode=500
 
 			next(error)
 		})
-	
-	
+})
+
+router.get('/my-orders',isAuth,(req,res,next)=>{
+	Order.find({'user.userID':req.user})
+		.populate('items.productID')
+		.then(orders=>{
+			res.status(200).json({orders:orders})
+		}).catch(error=>{
+			if(!error.statusCode)
+				error.statusCode=404;
+
+			next(error)
+		})
 })
 
 module.exports = router
