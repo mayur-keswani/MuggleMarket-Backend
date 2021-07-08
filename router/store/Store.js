@@ -118,7 +118,7 @@ router.post('/place-order',isAuth,(req,res,next)=>{
 	})
 	 order.save()
 	 	.then(order=>{
-			sendWhatsappMessage(order)
+			//sendWhatsappMessage(order)
 			// console.log(message.sid)
 		    res.status(201).json({message:"Your Order is successfully being placed",order:order})
 		}) 
