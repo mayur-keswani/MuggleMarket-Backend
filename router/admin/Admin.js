@@ -2,7 +2,8 @@ const express = require('express')
 const router= express.Router()
 const User = require('../../modal/User')
 const Store = require('../../modal/Store')
-const isAuth = require('../../middleware/isAuth')
+const isAuth = require('../../middleware/isAuth');
+const deleteFile = require('../../utils/deleteFileHelper')
 
 var cloudinary = require('cloudinary').v2;
 const Product = require('../../modal/Product')
@@ -56,6 +57,7 @@ router.post('/create-your-store',isAuth,async(req,res,next)=>{
 	let imageURL="";
 	if(req.file){
 		imageURL=await cloudinaryUploader(req.file.path)
+		deleteFile(req.file.path)
 	}
 	console.log(imageURL);
 		const store = new Store({
