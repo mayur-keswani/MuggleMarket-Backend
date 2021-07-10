@@ -170,12 +170,12 @@ router.get('/my-store/:id',isAuth,(req,res,next)=>{
 })
 
 router.post('/upload-items/:id',async(req,res,next)=>{
-
+	console.log(req.body)
 	const name = req.body.name;
 	const description = req.body.description;
 	const product_pic = req.file.path
 	const price = req.body.price
-	
+	const filterType = req.body.filter;
 	const productURL=await cloudinaryUploader(product_pic)
 
 					const product = new Product({
@@ -183,10 +183,12 @@ router.post('/upload-items/:id',async(req,res,next)=>{
 						name: name,
 						description: description,
 						product_pic: productURL,
-						price: price
+						price: price,
+						filterType:filterType
 					})
 					product.save()
 					  .then(product=>{
+						  	console.log(product)
 						  	return Store.findById(product.storeID)
 
 							
