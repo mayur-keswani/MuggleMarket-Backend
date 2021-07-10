@@ -57,7 +57,7 @@ router.post('/create-your-store',isAuth,async(req,res,next)=>{
 	let imageURL="";
 	if(req.file){
 		imageURL=await cloudinaryUploader(req.file.path)
-		deleteFile(req.file.path)
+		
 	}
 	console.log(imageURL);
 		const store = new Store({
@@ -79,6 +79,7 @@ router.post('/create-your-store',isAuth,async(req,res,next)=>{
 		})
 			store.save()
 				.then(result=>{
+					deleteFile(req.file.path)
 					return User.findById(req.user)
 				})
 				.then(user=>{		
