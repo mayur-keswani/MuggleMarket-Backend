@@ -4,7 +4,10 @@
   "description": "zomato-clone using rest api",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "12.16.1"
+  },
+  "engines":{
+    "node":"current_node_version"
   },
   "engines":{
     "node":"12.16.1"
