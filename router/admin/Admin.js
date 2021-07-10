@@ -79,7 +79,7 @@ router.post('/create-your-store',isAuth,async(req,res,next)=>{
 		})
 			store.save()
 				.then(result=>{
-					//deleteFile(req.file.path)
+					deleteFile(req.file.path)
 					return User.findById(req.user)
 				})
 				.then(user=>{		
