@@ -106,7 +106,7 @@ router.post('/make-online-payment',isAuth,(req,res,next)=>{
 	const address=req.body.address;
 	const price=req.body.price;
 	const token=req.body.token;
-	const items=req.body.items
+	// const items=req.body.items
 	const username=req.body.username
 
 	// const idempontencyKey=uuid()
