@@ -4,7 +4,9 @@ const router= express.Router()
 const Store = require('../../modal/Store')
 const User = require('../../modal/User')
 const Order = require('../../modal/Order');
-const Product = require('../../modal/Product')
+const Product = require('../../modal/Product');
+const { v4: uuid } =require('uuid')
+const stripe=require('stripe')(process.env.STRIPE_KEY)
 
 const accountSid = process.env.TRIVIA_ACCOUNT_SID; 
 const authToken = process.env.TRIVIA_AUTH_TOKEN; 
@@ -97,6 +99,67 @@ router.post('/checkout',isAuth,(req,res,next)=>{
 		})
 })
 
+
+//@desc: Stripe payment gateway
+router.post('/make-online-payment',isAuth,(req,res,next)=>{
+	
+	const address=req.body.address;
+	const price=req.body.price;
+	const token=req.body.token;
+	const items=req.body.items
+	const username=req.body.username
+
+	// const idempontencyKey=uuid()
+
+	return stripe.customers.create({
+			  email:token.email,
+			  source:token.id,
+			  name: username,
+        	  address: {
+            		line1: address,
+            		postal_code: 382475,
+            		city: token.card.city,
+            		state: token.card.state,
+            		country: token.card.country,
+       			},
+			
+		   })
+			.then((customer)=>{
+		 	  stripe.charges.create({ 
+			   amount:(price*100),
+			   currency:"INR",
+			   customer:customer.id,
+			   receipt_email:token.email,                   // not compulsory
+			   description: `Purchace via muggle-market`,                  // not compulsory
+			   source:customer.source,
+			   shipping:{
+				    name:username,
+					address:{
+						line1: address,
+            			postal_code: token.card.postal_code,
+            			city:token.card.city,
+            			state: token.card.state,
+            			country: token.card.country,
+					}
+			   }
+			   
+			  })
+			  .then(result=>{
+				return res.status(200).json({"message":"Successfull","result":result})
+			  })
+			  .catch((error)=>{
+				console.log(error)
+		  	 })
+ 
+			})
+		   
+			.catch((error)=>{
+				console.log(error)
+		   })
+	
+})
+
+//@desc: Placing Order Route
 router.post('/place-order',isAuth,(req,res,next)=>{
 	const address=req.body.address;
 	const charges = req.body.charges
@@ -118,7 +181,7 @@ router.post('/place-order',isAuth,(req,res,next)=>{
 	})
 	 order.save()
 	 	.then(order=>{
-			//sendWhatsappMessage(order)
+			sendWhatsappMessage(order)
 			// console.log(message.sid)
 		    res.status(201).json({message:"Your Order is successfully being placed",order:order})
 		}) 
