@@ -1,13 +1,13 @@
 {
   "name": "mugglemarket-backend",
   "version": "1.0.0",
-  "description": "zomato-clone using rest api",
+  "description": "zomato-clone",
   "main": "app.js",
   "scripts": {
-    "start": "12.16.1"
+    "start": "node app.js"
   },
   "engines": {
-    "node": "12.16.1"
+    "node": "16.13.1"
   },
   "author": "Mayur_keswani_",
   "license": "ISC",
