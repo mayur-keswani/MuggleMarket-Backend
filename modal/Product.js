@@ -17,7 +17,7 @@ const productSchema = new Schema(
       type: String,
       required: true,
     },
-    product_pic: {
+    picture: {
       type: String,
       required: true,
     },
@@ -25,8 +25,9 @@ const productSchema = new Schema(
       type: Number,
       required: true,
     },
-    filterType: {
-      type: String,
+    categories: {
+      type: [String],
+      required: true,
     },
   },
   {

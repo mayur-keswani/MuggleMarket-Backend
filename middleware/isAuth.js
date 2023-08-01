@@ -1,18 +1,24 @@
 const jwt = require("jsonwebtoken");
 
-const isAuth = (req, res, next) => {
-  const token = req.headers.authorization;
-
+const isAuth = async (req, res, next) => {
   let decodedToken;
   try {
-    decodedToken = jwt.verify(token, "ALOHOMORA");
+    if (
+      req.headers.authorization &&
+      req.headers.authorization.split(" ")[0] === "Bearer"
+    ) {
+      const token = req.headers.authorization.split(" ")[1];
+      decodedToken = await jwt.verify(token, "ALOHOMORA");
+    } else {
+      throw new Error("Invalid Request!");
+    }
   } catch (error) {
-    error.statusCode = 500;
-    next(error);
-  }
-  if (!decodedToken) {
-    const error = new Error("Not Authenticatd");
     error.statusCode = 401;
+    return next(error);
+  }
+  if (!!!decodedToken?.userID) {
+    const error = new Error("Invalud Request!");
+    return next(error);
   }
 
   req.user = decodedToken.userID;

@@ -8,6 +8,10 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
+    googleId:{
+      type:String,
+      required:false,
+    },
     email: {
       type: String,
       required: true,
@@ -18,7 +22,7 @@ const userSchema = new Schema(
     },
     cart: [
       {
-        productID: {
+        product: {
           type: Schema.Types.ObjectId,
           ref: "Product",
         },

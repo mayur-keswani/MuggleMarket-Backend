@@ -1,10 +1,10 @@
-const mongoose = require('mongoose')
-const User = require('./User')
-const Schema = mongoose.Schema
+const mongoose = require("mongoose");
+const User = require("./User");
+const Schema = mongoose.Schema;
 
 const storeSchema = new Schema(
   {
-    ownerID: {
+    owner: {
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
@@ -17,64 +17,74 @@ const storeSchema = new Schema(
       type: String,
       required: true,
     },
-    address: {
-      type: String,
-      required: true,
-    },
-    city: {
-      type: String,
-      required: true,
-    },
-    store_type: {
-      type: String,
-    },
-    contact_no: {
-      type: Number,
-      required: true,
-    },
-    landline_no: {
-      type: Number,
-    },
-    opening_time: {
-      type: String,
-      required: true,
-    },
-    closing_time: {
-      type: String,
-      required: true,
-    },
-    year_of_establish: {
-      type: Number,
-    },
-    store_items: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Product",
+    location: {
+      address: { type: String, required: true },
+      city: {
+        type: String,
+        required: true,
       },
-    ],
-    avg_expense: {
-      type: Number,
+      lat: { type: Number },
+      long: { type: Number },
     },
-    owner: {
+
+    storeType: {
       type: String,
       required: true,
     },
-    personal_no: {
+    contactNo: {
+      type: Number,
+      required: true,
+    },
+    landlineNo: {
+      type: Number,
+    },
+    openingTime: {
+      type: String,
+      required: true,
+    },
+    closingTime: {
+      type: String,
+      required: true,
+    },
+    yearOfEstablish: {
+      type: Number,
+    },
+    // storeItems: [
+    //   {
+    //     type: Schema.Types.ObjectId,
+    //     ref: "Product",
+    //   },
+    // ],
+    avgExpense: {
+      type: Number,
+    },
+    ownerName: {
+      type: String,
+      required: true,
+    },
+    personalNo: {
       type: Number,
     },
     social: {
-      personal_website: { type: String },
+      site: { type: String },
       instagram: { type: String },
       youtube: { type: String },
       facebook: { type: String },
     },
-    store_picture: {
+    picture: {
       type: String,
+      required: true,
     },
+    categories: [
+      {
+        name: { type: String },
+        description: { type: String },
+      },
+    ],
   },
   {
     timestamps: true,
   }
 );
 
-module.exports= mongoose.model('Store',storeSchema)
+module.exports = mongoose.model("Store", storeSchema);

@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-// Define the OrderSchema
-const orderSchema = new mongoose.Schema({
+// Define the CheckoutSchema
+const CheckoutSchema = new mongoose.Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: "User",
@@ -39,17 +39,13 @@ const orderSchema = new mongoose.Schema({
     enum: ["Pending", "Paid", "Failed"],
     default: "Pending",
   },
-  paymentIntentId: {
-    type: String,
-    required: false,
-  },
   totalAmount: {
     type: Number,
     required: true,
   },
 });
 
-// Create the Order model
-const Order = mongoose.model("Order", orderSchema);
+// Create the Checkout model
+const Checkout = mongoose.model("Checkout", CheckoutSchema);
 
-module.exports = Order;
+module.exports = Checkout;
